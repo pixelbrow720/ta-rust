@@ -1,7 +1,6 @@
 # TA-Rust: Pure Rust Technical Analysis Library
 
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
-[![Build Status](https://github.com/pixelbrow720/ta-rust/workflows/CI/badge.svg)](https://github.com/pixelbrow720/ta-rust/actions)
 
 A pure Rust implementation of TA-Lib (Technical Analysis Library) with 100% compatibility. This library provides **80+ technical analysis functions** for financial market analysis without any external C dependencies.
 
