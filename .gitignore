@@ -32,8 +32,8 @@ lcov.info
 criterion/
 
 # Documentation
-/docs/book/
-/docs/target/
+book/
+target/
 
 # Temporary files
 *.tmp
