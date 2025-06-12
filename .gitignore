@@ -1,0 +1,48 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage
+tarpaulin-report.html
+cobertura.xml
+lcov.info
+
+# Benchmark results
+/benches/target/
+criterion/
+
+# Documentation
+/docs/book/
+/docs/target/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local configuration
+.env
+.env.local
+
+# Directory
+blueprint/
+scripts/
