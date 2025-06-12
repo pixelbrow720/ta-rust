@@ -1,7 +1,5 @@
 # TA-Rust: Pure Rust Technical Analysis Library
 
-[![Crates.io](https://img.shields.io/crates/v/ta-rust.svg)](https://crates.io/crates/ta-rust)
-[![Documentation](https://docs.rs/ta-rust/badge.svg)](https://docs.rs/ta-rust)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
 [![Build Status](https://github.com/pixelbrow720/ta-rust/workflows/CI/badge.svg)](https://github.com/pixelbrow720/ta-rust/actions)
 
