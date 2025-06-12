@@ -1,6 +1,18 @@
 // ULTOSC - Ultimate Oscillator
 use crate::common::{TAError, TAResult};
 
+/// Calculates the Ultimate Oscillator.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period1` - First period
+/// * `period2` - Second period
+/// * `period3` - Third period
+/// 
+/// # Returns
+/// Vector of Ultimate Oscillator values
 pub fn ultosc(
     high: &[f64],
     low: &[f64],
@@ -11,10 +23,10 @@ pub fn ultosc(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     if len < period3 {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(period3, len));
     }
     let mut bp = vec![f64::NAN; len];
     let mut tr = vec![f64::NAN; len];

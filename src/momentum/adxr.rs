@@ -1,7 +1,17 @@
 // ADXR - Average Directional Movement Index Rating
-use crate::common::{TAError, TAResult};
+use crate::common::TAResult;
 use crate::momentum::adx;
 
+/// Calculates the Average Directional Movement Index Rating.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of ADXR values
 pub fn adxr(
     high: &[f64],
     low: &[f64],

@@ -2,6 +2,16 @@
 use crate::common::{TAError, TAResult, MAType};
 use crate::overlap::ma;
 
+/// Calculates the Percentage Price Oscillator (PPO).
+/// 
+/// # Arguments
+/// * `price` - Input price series
+/// * `fast_period` - Fast moving average period
+/// * `slow_period` - Slow moving average period
+/// * `ma_type` - Moving average type
+/// 
+/// # Returns
+/// Vector of PPO values
 pub fn ppo(
     price: &[f64],
     fast_period: usize,
@@ -9,7 +19,7 @@ pub fn ppo(
     ma_type: MAType,
 ) -> TAResult<Vec<f64>> {
     if price.len() < slow_period {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(slow_period, price.len()));
     }
     let fast = ma(price, fast_period, ma_type)?;
     let slow = ma(price, slow_period, ma_type)?;

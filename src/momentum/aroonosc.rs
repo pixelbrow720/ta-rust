@@ -1,7 +1,16 @@
 // AROONOSC - Aroon Oscillator
-use crate::common::{TAError, TAResult};
+use crate::common::TAResult;
 use crate::momentum::aroon;
 
+/// Calculates the Aroon Oscillator.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of Aroon Oscillator values
 pub fn aroonosc(
     high: &[f64],
     low: &[f64],

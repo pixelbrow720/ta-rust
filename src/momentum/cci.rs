@@ -3,6 +3,16 @@ use crate::common::{TAError, TAResult};
 use crate::price_transform::typprice;
 use crate::overlap::sma;
 
+/// Calculates the Commodity Channel Index (CCI).
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of CCI values
 pub fn cci(
     high: &[f64],
     low: &[f64],
@@ -11,10 +21,10 @@ pub fn cci(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     if len < period {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(period, len));
     }
     let tp = typprice(high, low, close)?;
     let sma_tp = sma(&tp, period)?;

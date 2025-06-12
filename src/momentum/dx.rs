@@ -2,6 +2,16 @@
 use crate::common::{TAError, TAResult};
 use crate::momentum::{plus_di, minus_di};
 
+/// Calculates the Directional Movement Index.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of DX values
 pub fn dx(
     high: &[f64],
     low: &[f64],
@@ -10,7 +20,7 @@ pub fn dx(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     let plusdi = plus_di(high, low, close, period)?;
     let minusdi = minus_di(high, low, close, period)?;

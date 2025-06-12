@@ -1,6 +1,15 @@
 // AROON - Aroon Up/Down
 use crate::common::{TAError, TAResult};
 
+/// Calculates the Aroon Up and Aroon Down indicators.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Tuple of (Aroon Up, Aroon Down)
 pub fn aroon(
     high: &[f64],
     low: &[f64],
@@ -8,10 +17,10 @@ pub fn aroon(
 ) -> TAResult<(Vec<f64>, Vec<f64>)> {
     let len = high.len();
     if low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}", len, low.len())));
     }
     if len < period {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(period, len));
     }
     let mut up = vec![f64::NAN; len];
     let mut down = vec![f64::NAN; len];

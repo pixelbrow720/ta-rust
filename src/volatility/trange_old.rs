@@ -21,7 +21,7 @@ use crate::common::TAError;
 /// # Returns
 /// 
 /// Returns `Ok(Vec<f64>)` containing True Range values, or `Err(TAError)` on invalid input.
-/// The first value will be NaN since there's no previous close (following TA-Lib convention).
+/// The first value will be High[0] - Low[0] since there's no previous close.
 /// 
 /// # Example
 /// 
@@ -45,10 +45,35 @@ pub fn trange(high: &[f64], low: &[f64], close: &[f64]) -> Result<Vec<f64>, TAEr
         return Err(TAError::mismatched_inputs("High, Low, and Close arrays must have the same length"));
     }
     
+    // Validate OHLC constraints (we'll use close as open for first bar)
+    for i in 0..high.len() {
+        let (h, l, c) = (high[i], low[i], close[i]);
+        
+        if !h.is_finite() || !l.is_finite() || !c.is_finite() {
+            return Err(TAError::invalid_input(format!(
+                "Invalid HLC values at index {}: H={}, L={}, C={}",
+                i, h, l, c
+            )));
+        }
+        
+        if h < l {
+            return Err(TAError::invalid_input(format!(
+                "High ({}) < Low ({}) at index {}",
+                h, l, i
+            )));
+        }
+        if h < c || l > c {
+            return Err(TAError::invalid_input(format!(
+                "Close ({}) is outside High-Low range [{}, {}] at index {}",
+                c, l, h, i
+            )));
+        }
+    }
+    
     let len = high.len();
     let mut result = Vec::with_capacity(len);
     
-    // First value: High - Low (no previous close available)
+    // First value: High[0] - Low[0] (no previous close available)
     result.push(high[0] - low[0]);
     
     // Calculate True Range for remaining periods
@@ -104,6 +129,7 @@ pub fn trange_ohlc(ohlc: &[crate::common::types::OHLC]) -> Result<Vec<f64>, TAEr
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::common::types::OHLC;
 
     #[test]
     fn test_trange_basic() {
@@ -115,8 +141,8 @@ mod tests {
         
         assert_eq!(result.len(), 5);
         
-        // First TR = High - Low (no previous close)
-        assert!((result[0] - (10.0 - 9.0)).abs() < 1e-8);
+        // First TR = High[0] - Low[0] = 10.0 - 9.0 = 1.0
+        assert!((result[0] - 1.0).abs() < 1e-8);
         
         // Second TR = max(11.0-10.0, |11.0-9.5|, |10.0-9.5|) = max(1.0, 1.5, 0.5) = 1.5
         assert!((result[1] - 1.5).abs() < 1e-8);
@@ -134,11 +160,27 @@ mod tests {
         
         let result = trange(&high, &low, &close).unwrap();
         
-        // First TR = High - Low
-        assert!((result[0] - (10.0 - 9.0)).abs() < 1e-8);
+        // First TR = 10.0 - 9.0 = 1.0
+        assert!((result[0] - 1.0).abs() < 1e-8);
         
         // Second TR = max(15.0-14.0, |15.0-9.5|, |14.0-9.5|) = max(1.0, 5.5, 4.5) = 5.5
         assert!((result[1] - 5.5).abs() < 1e-8);
+    }
+
+    #[test]
+    fn test_trange_gap_down() {
+        // Test gap down scenario
+        let high = vec![10.0, 6.0];
+        let low = vec![9.0, 5.0];
+        let close = vec![9.5, 5.5];
+        
+        let result = trange(&high, &low, &close).unwrap();
+        
+        // First TR = 10.0 - 9.0 = 1.0
+        assert!((result[0] - 1.0).abs() < 1e-8);
+        
+        // Second TR = max(6.0-5.0, |6.0-9.5|, |5.0-9.5|) = max(1.0, 3.5, 4.5) = 4.5
+        assert!((result[1] - 4.5).abs() < 1e-8);
     }
 
     #[test]
@@ -150,7 +192,7 @@ mod tests {
         let result = trange(&high, &low, &close).unwrap();
         
         assert_eq!(result.len(), 1);
-        assert!((result[0] - (10.0 - 9.0)).abs() < 1e-8);
+        assert!((result[0] - 1.0).abs() < 1e-8);
     }
 
     #[test]
@@ -171,5 +213,84 @@ mod tests {
         
         let result = trange(&high, &low, &close);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_trange_ohlc() {
+        let data = vec![
+            OHLC { open: 9.2, high: 10.0, low: 9.0, close: 9.5 },
+            OHLC { open: 9.5, high: 11.0, low: 10.0, close: 10.5 },
+            OHLC { open: 10.5, high: 12.0, low: 10.5, close: 11.5 },
+        ];
+        
+        let result = trange_ohlc(&data).unwrap();
+        
+        assert_eq!(result.len(), 3);
+        assert!((result[0] - 1.0).abs() < 1e-8);
+        assert!((result[1] - 1.5).abs() < 1e-8);
+        assert!((result[2] - 1.5).abs() < 1e-8);
+    }
+
+    #[test]
+    fn test_trange_ohlc_empty() {
+        let data = vec![];
+        let result = trange_ohlc(&data);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_trange_real_market_data() {
+        // Real market scenario with various price movements
+        let high = vec![100.0, 102.0, 101.5, 103.0, 99.0, 101.0];
+        let low = vec![98.0, 100.5, 99.0, 100.0, 96.0, 98.5];
+        let close = vec![99.0, 101.0, 100.0, 102.0, 97.0, 100.0];
+        
+        let result = trange(&high, &low, &close).unwrap();
+        
+        assert_eq!(result.len(), 6);
+        
+        // Verify each calculation
+        assert!((result[0] - 2.0).abs() < 1e-8); // 100.0 - 98.0
+        
+        // Second: max(102.0-100.5, |102.0-99.0|, |100.5-99.0|) = max(1.5, 3.0, 1.5) = 3.0
+        assert!((result[1] - 3.0).abs() < 1e-8);
+        
+        // Third: max(101.5-99.0, |101.5-101.0|, |99.0-101.0|) = max(2.5, 0.5, 2.0) = 2.5
+        assert!((result[2] - 2.5).abs() < 1e-8);
+    }
+
+    #[test]
+    fn test_trange_constant_prices() {
+        let high = vec![10.0, 10.0, 10.0];
+        let low = vec![10.0, 10.0, 10.0];
+        let close = vec![10.0, 10.0, 10.0];
+        
+        let result = trange(&high, &low, &close).unwrap();
+        
+        assert_eq!(result.len(), 3);
+        for &tr in &result {
+            assert!((tr - 0.0).abs() < 1e-8);
+        }
+    }
+
+    #[test]
+    fn test_trange_extreme_volatility() {
+        // Test with extreme price movements
+        let high = vec![100.0, 200.0, 50.0];
+        let low = vec![90.0, 150.0, 40.0];
+        let close = vec![95.0, 180.0, 45.0];
+        
+        let result = trange(&high, &low, &close).unwrap();
+        
+        assert_eq!(result.len(), 3);
+        
+        // First: 100.0 - 90.0 = 10.0
+        assert!((result[0] - 10.0).abs() < 1e-8);
+        
+        // Second: max(200.0-150.0, |200.0-95.0|, |150.0-95.0|) = max(50.0, 105.0, 55.0) = 105.0
+        assert!((result[1] - 105.0).abs() < 1e-8);
+        
+        // Third: max(50.0-40.0, |50.0-180.0|, |40.0-180.0|) = max(10.0, 130.0, 140.0) = 140.0
+        assert!((result[2] - 140.0).abs() < 1e-8);
     }
 }

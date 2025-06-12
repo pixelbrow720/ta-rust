@@ -3,6 +3,16 @@ use crate::common::{TAError, TAResult};
 use crate::momentum::plus_dm;
 use crate::volatility::atr;
 
+/// Calculates the Plus Directional Indicator.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of Plus DI values
 pub fn plus_di(
     high: &[f64],
     low: &[f64],
@@ -11,7 +21,7 @@ pub fn plus_di(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     let plusdm = plus_dm(high, low)?;
     let atr = atr(high, low, close, period)?;

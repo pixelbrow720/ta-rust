@@ -2,6 +2,17 @@
 use crate::common::{TAError, TAResult};
 use crate::price_transform::typprice;
 
+/// Calculates the Money Flow Index (MFI).
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `volume` - Volume data
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of MFI values
 pub fn mfi(
     high: &[f64],
     low: &[f64],
@@ -11,10 +22,10 @@ pub fn mfi(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len || volume.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}, volume: {}", high.len(), low.len(), len, volume.len())));
     }
     if len < period + 1 {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(period + 1, len));
     }
     let tp = typprice(high, low, close)?;
     let mut pos_mf = vec![0.0; len];

@@ -3,6 +3,17 @@ use crate::common::{TAError, TAResult, MAType};
 use crate::momentum::rsi;
 use crate::overlap::ma;
 
+/// Calculates the Stochastic RSI.
+/// 
+/// # Arguments
+/// * `price` - Input price series
+/// * `rsi_period` - RSI period
+/// * `fastk_period` - Fast %K period
+/// * `fastd_period` - Fast %D period
+/// * `fastd_ma` - Fast %D moving average type
+/// 
+/// # Returns
+/// Tuple of (Fast %K, Fast %D)
 pub fn stochrsi(
     price: &[f64],
     rsi_period: usize,
@@ -13,7 +24,7 @@ pub fn stochrsi(
     let rsi_vec = rsi(price, rsi_period)?;
     let len = rsi_vec.len();
     if len < fastk_period {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(fastk_period, len));
     }
     let mut stochrsi = vec![f64::NAN; len];
     for i in (fastk_period - 1)..len {

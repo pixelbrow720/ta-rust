@@ -13,7 +13,7 @@ pub fn macdext(
     signal_ma: MAType,
 ) -> TAResult<(Vec<f64>, Vec<f64>, Vec<f64>)> {
     if price.len() < slow_period + signal_period - 1 {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(slow_period + signal_period - 1, price.len()));
     }
     let fast = ma(price, fast_period, fast_ma)?;
     let slow = ma(price, slow_period, slow_ma)?;

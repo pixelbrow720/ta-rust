@@ -2,6 +2,20 @@
 use crate::common::{TAError, TAResult, MAType};
 use crate::overlap::ma;
 
+/// Calculates the Stochastic Oscillator.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `fastk_period` - Fast %K period
+/// * `slowk_period` - Slow %K period
+/// * `slowk_ma` - Slow %K moving average type
+/// * `slowd_period` - Slow %D period
+/// * `slowd_ma` - Slow %D moving average type
+/// 
+/// # Returns
+/// Tuple of (Slow %K, Slow %D)
 pub fn stoch(
     high: &[f64],
     low: &[f64],
@@ -14,10 +28,10 @@ pub fn stoch(
 ) -> TAResult<(Vec<f64>, Vec<f64>)> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     if len < fastk_period {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(fastk_period, len));
     }
     let mut fastk = vec![f64::NAN; len];
     for i in (fastk_period - 1)..len {

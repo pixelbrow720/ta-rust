@@ -25,7 +25,7 @@ pub fn macd(
     signal_period: usize,
 ) -> TAResult<(Vec<f64>, Vec<f64>, Vec<f64>)> {
     if price.len() < slow_period + signal_period - 1 {
-        return Err(TAError::InsufficientData);
+        return Err(TAError::insufficient_data(slow_period + signal_period - 1, price.len()));
     }
     let fast_ema = ema(price, fast_period)?;
     let slow_ema = ema(price, slow_period)?;
@@ -36,7 +36,9 @@ pub fn macd(
         }
         macd_line[i] = fast_ema[i] - slow_ema[i];
     }
-    let signal_line = ema(&macd_line, signal_period)?;
+    // Create a clean MACD line for signal calculation (replace NaN with 0.0)
+    let clean_macd: Vec<f64> = macd_line.iter().map(|&x| if x.is_nan() { 0.0 } else { x }).collect();
+    let signal_line = ema(&clean_macd, signal_period)?;
     let mut hist = vec![f64::NAN; price.len()];
     for i in 0..price.len() {
         if i < slow_period + signal_period - 2 {

@@ -3,6 +3,16 @@ use crate::common::{TAError, TAResult};
 use crate::momentum::minus_dm;
 use crate::volatility::atr;
 
+/// Calculates the Minus Directional Indicator.
+/// 
+/// # Arguments
+/// * `high` - High prices
+/// * `low` - Low prices
+/// * `close` - Close prices
+/// * `period` - Period for calculation
+/// 
+/// # Returns
+/// Vector of Minus DI values
 pub fn minus_di(
     high: &[f64],
     low: &[f64],
@@ -11,7 +21,7 @@ pub fn minus_di(
 ) -> TAResult<Vec<f64>> {
     let len = close.len();
     if high.len() != len || low.len() != len {
-        return Err(TAError::MismatchedInputLength);
+        return Err(TAError::mismatched_inputs(format!("high: {}, low: {}, close: {}", high.len(), low.len(), len)));
     }
     let minusdm = minus_dm(high, low)?;
     let atr = atr(high, low, close, period)?;
