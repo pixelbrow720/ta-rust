@@ -36,3 +36,31 @@ pub fn is_within_tolerance(actual: Price, expected: Price, tolerance: Price) -> 
         (actual - expected).abs() <= tolerance
     }
 }
+
+/// Macro for asserting floating point equality with tolerance
+#[macro_export]
+macro_rules! assert_float_eq {
+    ($left:expr, $right:expr, $tolerance:expr) => {
+        {
+            let left_val = $left as f64;
+            let right_val = $right as f64;
+            let tolerance_val = $tolerance as f64;
+            
+            if right_val.is_nan() {
+                assert!(left_val.is_nan(), 
+                    "Expected NaN, got {}", left_val);
+            } else {
+                let diff = (left_val - right_val).abs();
+                assert!(
+                    diff <= tolerance_val,
+                    "assertion failed: `(left ≈ right)` \
+                     left: `{}`, right: `{}`, tolerance: `{}`, diff: `{}`",
+                    left_val, right_val, tolerance_val, diff
+                );
+            }
+        }
+    };
+}
+
+// Re-export the macro for use in tests
+pub use assert_float_eq;

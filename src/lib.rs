@@ -56,11 +56,13 @@ pub mod momentum;
 pub mod volatility;
 pub mod math_transform;
 
+// Function categories - Phase 5 implementations
+pub mod volume;
+pub mod statistic;
+
 // Function categories (will be implemented in subsequent phases)
-// pub mod volume;
 // pub mod cycle;
 // pub mod pattern;
-// pub mod statistic;
 
 // Prelude for convenient imports
 pub mod prelude {
@@ -73,5 +75,7 @@ pub mod prelude {
     pub use crate::momentum::*;
     pub use crate::volatility::*;
     pub use crate::math_transform::*;
+    pub use crate::volume::*;
+    pub use crate::statistic::*;
     // Additional re-exports will be added as modules are implemented
 }
