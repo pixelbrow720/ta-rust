@@ -55,13 +55,13 @@ pub fn atr(high: &[f64], low: &[f64], close: &[f64], period: usize) -> Result<Ve
     let tr_values = trange(high, low, close)?;
     
     let mut result = vec![f64::NAN; len];
-    let alpha = 1.0 / period as f64;
     
     // Initialize ATR with SMA of first 'period' TR values
     let initial_atr: f64 = tr_values[0..period].iter().sum::<f64>() / period as f64;
     result[period - 1] = initial_atr;
     
     // Apply Wilder's smoothing for remaining values
+    let alpha = 1.0 / period as f64;
     for i in period..len {
         result[i] = alpha * tr_values[i] + (1.0 - alpha) * result[i - 1];
     }

@@ -50,8 +50,8 @@ pub fn obv(close: &[f64], volume: &[f64]) -> TAResult<Vec<f64>> {
     let len = close.len();
     let mut result = vec![0.0; len];
     
-    // First value is always 0 (or first volume value as starting point)
-    result[0] = 0.0;
+    // First value is the first volume value (TA-Lib compatible)
+    result[0] = volume[0];
     
     for i in 1..len {
         if close[i] > close[i - 1] {
@@ -79,11 +79,11 @@ mod tests {
         let result = obv(&close, &volume).unwrap();
         
         assert_eq!(result.len(), 5);
-        assert_eq!(result[0], 0.0);
-        assert_eq!(result[1], 1500.0);  // 0 + 1500 (price up)
-        assert_eq!(result[2], 700.0);   // 1500 - 800 (price down)
-        assert_eq!(result[3], 2700.0);  // 700 + 2000 (price up)
-        assert_eq!(result[4], 1500.0);  // 2700 - 1200 (price down)
+        assert_eq!(result[0], 1000.0);  // First volume value
+        assert_eq!(result[1], 2500.0);  // 1000 + 1500 (price up)
+        assert_eq!(result[2], 1700.0);  // 2500 - 800 (price down)
+        assert_eq!(result[3], 3700.0);  // 1700 + 2000 (price up)
+        assert_eq!(result[4], 2500.0);  // 3700 - 1200 (price down)
     }
 
     #[test]
@@ -92,9 +92,9 @@ mod tests {
         let volume = vec![1000.0, 1500.0, 800.0];
         let result = obv(&close, &volume).unwrap();
         
-        assert_eq!(result[0], 0.0);
-        assert_eq!(result[1], 0.0);  // Price unchanged
-        assert_eq!(result[2], 0.0);  // Price unchanged
+        assert_eq!(result[0], 1000.0);  // First volume value
+        assert_eq!(result[1], 1000.0);  // Price unchanged
+        assert_eq!(result[2], 1000.0);  // Price unchanged
     }
 
     #[test]
@@ -118,6 +118,6 @@ mod tests {
         let result = obv(&close, &volume).unwrap();
         
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], 0.0);
+        assert_eq!(result[0], 1000.0);  // First volume value
     }
 }

@@ -68,7 +68,7 @@ pub fn sar(high: &[f64], low: &[f64], acceleration: f64, max_acceleration: f64) 
     let mut sar: f64;
     let mut is_long: bool;
     
-    // Determine initial trend direction
+    // Determine initial trend direction based on first two periods
     if high[1] > high[0] {
         // Start with uptrend
         is_long = true;
@@ -81,9 +81,24 @@ pub fn sar(high: &[f64], low: &[f64], acceleration: f64, max_acceleration: f64) 
         ep = low[1];
     }
     
+    // Set initial SAR values
     result[0] = sar;
+    result[1] = sar;
     
-    for i in 1..len {
+    for i in 2..len {
+        // Update extreme point before calculating new SAR
+        if is_long {
+            if high[i - 1] > ep {
+                ep = high[i - 1];
+                af = (af + acceleration).min(max_acceleration);
+            }
+        } else {
+            if low[i - 1] < ep {
+                ep = low[i - 1];
+                af = (af + acceleration).min(max_acceleration);
+            }
+        }
+        
         let prev_sar = sar;
         
         // Calculate new SAR
@@ -102,7 +117,7 @@ pub fn sar(high: &[f64], low: &[f64], acceleration: f64, max_acceleration: f64) 
                 ep = low[i];  // New EP is current low
                 af = acceleration;  // Reset AF
             } else {
-                // Continue uptrend
+                // Continue uptrend - check current period for new EP
                 if high[i] > ep {
                     ep = high[i];  // New extreme point
                     af = (af + acceleration).min(max_acceleration);  // Increase AF
@@ -121,7 +136,7 @@ pub fn sar(high: &[f64], low: &[f64], acceleration: f64, max_acceleration: f64) 
                 ep = high[i];  // New EP is current high
                 af = acceleration;  // Reset AF
             } else {
-                // Continue downtrend
+                // Continue downtrend - check current period for new EP
                 if low[i] < ep {
                     ep = low[i];  // New extreme point
                     af = (af + acceleration).min(max_acceleration);  // Increase AF

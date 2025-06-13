@@ -32,11 +32,18 @@ pub fn sum(data: &[Price], period: Period) -> TAResult<Vec<Price>> {
     validate_sufficient_data(data, period, "data")?;
 
     let mut output = allocate_output(data.len());
+    let mut rolling_sum = 0.0;
     
-    for i in (period - 1)..data.len() {
-        let start_index = i + 1 - period;
-        let window_sum: Price = data[start_index..=i].iter().sum();
-        output[i] = window_sum;
+    // Initialize sum for first period
+    for i in 0..period {
+        rolling_sum += data[i];
+    }
+    output[period - 1] = rolling_sum;
+    
+    // Rolling calculation for remaining values
+    for i in period..data.len() {
+        rolling_sum = rolling_sum - data[i - period] + data[i];
+        output[i] = rolling_sum;
     }
 
     Ok(output)

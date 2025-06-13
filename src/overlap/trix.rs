@@ -201,7 +201,8 @@ mod tests {
         
         // Should have some valid values after the EMAs stabilize (may be zero for short data)
         let valid_count = result.iter().filter(|&&x| !x.is_nan()).count();
-        assert!(valid_count >= 0);
+        // valid_count is always >= 0 since it's usize, so just check it exists
+        let _ = valid_count;
         
         // TRIX values should be reasonable (not extremely large)
         for &value in result.iter() {
@@ -239,9 +240,9 @@ mod tests {
         let trix_valid = trix_values.iter().filter(|&&x| !x.is_nan()).count();
         let signal_valid = signal_line.iter().filter(|&&x| !x.is_nan()).count();
         
-        assert!(trix_valid >= 0);
-        // Signal may have fewer valid values than TRIX
-        assert!(signal_valid >= 0);
+        // trix_valid and signal_valid are always >= 0 since they're usize, so just check they exist
+        let _ = trix_valid;
+        let _ = signal_valid;
     }
 
     #[test]
@@ -270,7 +271,8 @@ mod tests {
         
         // Should have some valid values (may be zero for short data)
         let valid_count = ema3.iter().filter(|&&x| !x.is_nan()).count();
-        assert!(valid_count >= 0);
+        // valid_count is always >= 0 since it's usize, so just check it exists
+        let _ = valid_count;
         
         // EMA3 should be positive for positive prices
         for &value in ema3.iter() {

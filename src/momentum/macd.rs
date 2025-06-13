@@ -24,28 +24,57 @@ pub fn macd(
     slow_period: usize,
     signal_period: usize,
 ) -> TAResult<(Vec<f64>, Vec<f64>, Vec<f64>)> {
-    if price.len() < slow_period + signal_period - 1 {
-        return Err(TAError::insufficient_data(slow_period + signal_period - 1, price.len()));
+    if price.is_empty() {
+        return Err(TAError::invalid_input("Price data cannot be empty"));
     }
+    
+    if price.len() < slow_period {
+        return Err(TAError::insufficient_data(slow_period, price.len()));
+    }
+    
+    // Calculate EMAs
     let fast_ema = ema(price, fast_period)?;
     let slow_ema = ema(price, slow_period)?;
+    
+    // Calculate MACD line
     let mut macd_line = vec![f64::NAN; price.len()];
-    for i in 0..price.len() {
-        if i < slow_period - 1 {
-            continue;
+    for i in (slow_period - 1)..price.len() {
+        if !fast_ema[i].is_nan() && !slow_ema[i].is_nan() {
+            macd_line[i] = fast_ema[i] - slow_ema[i];
         }
-        macd_line[i] = fast_ema[i] - slow_ema[i];
     }
-    // Create a clean MACD line for signal calculation (replace NaN with 0.0)
-    let clean_macd: Vec<f64> = macd_line.iter().map(|&x| if x.is_nan() { 0.0 } else { x }).collect();
-    let signal_line = ema(&clean_macd, signal_period)?;
+    
+    // Calculate signal line using EMA of MACD line
+    // Extract valid MACD values for signal calculation
+    let valid_macd_start = slow_period - 1;
+    let macd_for_signal: Vec<f64> = macd_line[valid_macd_start..].to_vec();
+    
+    if macd_for_signal.len() < signal_period {
+        // Not enough data for signal line
+        let signal_line = vec![f64::NAN; price.len()];
+        let hist = vec![f64::NAN; price.len()];
+        return Ok((macd_line, signal_line, hist));
+    }
+    
+    let signal_ema = ema(&macd_for_signal, signal_period)?;
+    
+    // Map signal back to full length
+    let mut signal_line = vec![f64::NAN; price.len()];
+    for (i, &sig_val) in signal_ema.iter().enumerate() {
+        let full_index = valid_macd_start + i;
+        if full_index < price.len() {
+            signal_line[full_index] = sig_val;
+        }
+    }
+    
+    // Calculate histogram
     let mut hist = vec![f64::NAN; price.len()];
     for i in 0..price.len() {
-        if i < slow_period + signal_period - 2 {
-            continue;
+        if !macd_line[i].is_nan() && !signal_line[i].is_nan() {
+            hist[i] = macd_line[i] - signal_line[i];
         }
-        hist[i] = macd_line[i] - signal_line[i];
     }
+    
     Ok((macd_line, signal_line, hist))
 }
 
@@ -63,4 +92,4 @@ mod tests {
             assert!((hist[i] - 0.0).abs() < 1e-8);
         }
     }
-} 
+}

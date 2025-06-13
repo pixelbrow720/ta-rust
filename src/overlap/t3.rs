@@ -192,9 +192,9 @@ mod tests {
         assert_eq!(result.len(), 15);
         
         // Should have some valid values (may be zero for short data)
-        let valid_count = result.iter().filter(|&&x| !x.is_nan()).count();
+        let _valid_count = result.iter().filter(|&&x| !x.is_nan()).count();
         // For T3 with short data, we might not have any valid values
-        assert!(valid_count >= 0);
+        // valid_count is always >= 0 by definition
     }
 
     #[test]
@@ -207,12 +207,11 @@ mod tests {
         assert_eq!(result_low.len(), result_high.len());
         
         // Both should have valid values (may be zero for short data)
-        let valid_low = result_low.iter().filter(|&&x| !x.is_nan()).count();
-        let valid_high = result_high.iter().filter(|&&x| !x.is_nan()).count();
+        let _valid_low = result_low.iter().filter(|&&x| !x.is_nan()).count();
+        let _valid_high = result_high.iter().filter(|&&x| !x.is_nan()).count();
         
         // For T3 with short data, we might not have any valid values
-        assert!(valid_low >= 0);
-        assert!(valid_high >= 0);
+        // valid counts are always >= 0 by definition
         
         // Results should be different due to different volume factors (if we have valid values)
         let mut _differences = 0;
@@ -230,7 +229,7 @@ mod tests {
         if _total_comparisons > 0 {
             // With different volume factors, we expect some differences
             // But for very short data, results might be identical
-            assert!(_differences >= 0);
+            // differences is always >= 0 by definition
         }
     }
 
@@ -298,12 +297,11 @@ mod tests {
         assert_eq!(result_one.len(), 15);
         
         // Both should have some valid values (may be zero for short data)
-        let valid_zero = result_zero.iter().filter(|&&x| !x.is_nan()).count();
-        let valid_one = result_one.iter().filter(|&&x| !x.is_nan()).count();
+        let _valid_zero = result_zero.iter().filter(|&&x| !x.is_nan()).count();
+        let _valid_one = result_one.iter().filter(|&&x| !x.is_nan()).count();
         
         // For T3 with short data, we might not have any valid values
-        assert!(valid_zero >= 0);
-        assert!(valid_one >= 0);
+        // valid counts are always >= 0 by definition
     }
 
     #[test]

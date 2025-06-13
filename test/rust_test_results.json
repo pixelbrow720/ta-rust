@@ -1,0 +1,135 @@
+{
+  "total_tests": 14,
+  "passed_tests": 8,
+  "failed_tests": 6,
+  "success_rate": 57.14285714285714,
+  "tolerance": 1e-8,
+  "results": [
+    {
+      "function_name": "sma_14",
+      "phase": 2,
+      "category": "Overlap Studies",
+      "passed": true,
+      "max_error": 8.526512829121202e-14,
+      "mean_error": 2.3194728385732006e-14,
+      "error_message": null
+    },
+    {
+      "function_name": "ema_14",
+      "phase": 2,
+      "category": "Overlap Studies",
+      "passed": true,
+      "max_error": 5.684341886080802e-14,
+      "mean_error": 2.1234610493980005e-14,
+      "error_message": null
+    },
+    {
+      "function_name": "wma_14",
+      "phase": 2,
+      "category": "Overlap Studies",
+      "passed": true,
+      "max_error": 1.9895196601282805e-13,
+      "mean_error": 5.635338938787002e-14,
+      "error_message": null
+    },
+    {
+      "function_name": "rsi_14",
+      "phase": 3,
+      "category": "Momentum",
+      "passed": true,
+      "max_error": 8.526512829121202e-14,
+      "mean_error": 2.1027107703598313e-14,
+      "error_message": null
+    },
+    {
+      "function_name": "roc_10",
+      "phase": 3,
+      "category": "Momentum",
+      "passed": true,
+      "max_error": 4.440892098500626e-14,
+      "mean_error": 5.9591220846755274e-15,
+      "error_message": null
+    },
+    {
+      "function_name": "mom_10",
+      "phase": 3,
+      "category": "Momentum",
+      "passed": true,
+      "max_error": 2.886579864025407e-14,
+      "mean_error": 6.21015584635466e-15,
+      "error_message": null
+    },
+    {
+      "function_name": "macd_line",
+      "phase": 4,
+      "category": "Momentum",
+      "passed": false,
+      "max_error": null,
+      "mean_error": null,
+      "error_message": "NaN patterns don't match"
+    },
+    {
+      "function_name": "atr_14",
+      "phase": 3,
+      "category": "Volatility",
+      "passed": false,
+      "max_error": null,
+      "mean_error": null,
+      "error_message": "NaN patterns don't match"
+    },
+    {
+      "function_name": "natr_14",
+      "phase": 3,
+      "category": "Volatility",
+      "passed": false,
+      "max_error": null,
+      "mean_error": null,
+      "error_message": "NaN patterns don't match"
+    },
+    {
+      "function_name": "trange",
+      "phase": 3,
+      "category": "Volatility",
+      "passed": false,
+      "max_error": null,
+      "mean_error": null,
+      "error_message": "NaN patterns don't match"
+    },
+    {
+      "function_name": "obv",
+      "phase": 5,
+      "category": "Volume",
+      "passed": true,
+      "max_error": 8.731149137020111e-11,
+      "mean_error": 2.4688233679626137e-11,
+      "error_message": null
+    },
+    {
+      "function_name": "ad",
+      "phase": 5,
+      "category": "Volume",
+      "passed": false,
+      "max_error": 1.5701516531407833e-8,
+      "mean_error": 5.352011953618785e-9,
+      "error_message": "Max error 1.57e-8 > tolerance 1.00e-8"
+    },
+    {
+      "function_name": "bbands_middle",
+      "phase": 5,
+      "category": "Advanced Overlap",
+      "passed": true,
+      "max_error": 7.105427357601002e-14,
+      "mean_error": 2.859715208120897e-14,
+      "error_message": null
+    },
+    {
+      "function_name": "sar",
+      "phase": 5,
+      "category": "Advanced Overlap",
+      "passed": false,
+      "max_error": null,
+      "mean_error": null,
+      "error_message": "NaN patterns don't match"
+    }
+  ]
+}

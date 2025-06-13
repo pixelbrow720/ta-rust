@@ -5,7 +5,40 @@
 
 use crate::common::{TAError, TAResult};
 use crate::volume::ad;
-use crate::overlap::ema;
+
+/// TA-Lib compatible EMA calculation
+/// Uses SMA of first period values as initial EMA value (matches TA-Lib exactly)
+fn ema_talib_compatible(data: &[f64], period: usize) -> TAResult<Vec<f64>> {
+    if data.is_empty() {
+        return Err(TAError::invalid_input("Data cannot be empty"));
+    }
+    
+    if period == 0 {
+        return Err(TAError::invalid_parameter("period", "must be greater than 0"));
+    }
+    
+    let len = data.len();
+    let mut result = vec![f64::NAN; len];
+    
+    if len < period {
+        return Ok(result);
+    }
+    
+    let multiplier = 2.0 / (period as f64 + 1.0);
+    
+    // Initialize EMA with SMA of first period values (TA-Lib method)
+    let initial_sum: f64 = data[0..period].iter().sum();
+    let mut ema_value = initial_sum / period as f64;
+    result[period - 1] = ema_value;
+    
+    // Calculate EMA for remaining values
+    for i in period..len {
+        ema_value = (data[i] * multiplier) + (ema_value * (1.0 - multiplier));
+        result[i] = ema_value;
+    }
+    
+    Ok(result)
+}
 
 /// Chaikin A/D Oscillator (ADOSC)
 ///
@@ -62,15 +95,19 @@ pub fn adosc(
     }
     
     if fast_period >= slow_period {
-        return Err(TAError::invalid_parameter("period", "less than slow period"));
+        return Err(TAError::invalid_parameter("period", "fast period must be less than slow period"));
+    }
+    
+    if len < slow_period {
+        return Err(TAError::insufficient_data(slow_period, len));
     }
     
     // Calculate A/D Line
     let ad_line = ad(high, low, close, volume)?;
     
-    // Calculate fast and slow EMAs of A/D Line
-    let fast_ema = ema(&ad_line, fast_period)?;
-    let slow_ema = ema(&ad_line, slow_period)?;
+    // Calculate fast and slow EMAs of A/D Line using TA-Lib compatible method
+    let fast_ema = ema_talib_compatible(&ad_line, fast_period)?;
+    let slow_ema = ema_talib_compatible(&ad_line, slow_period)?;
     
     // Calculate oscillator as difference
     let mut result = vec![f64::NAN; len];
@@ -108,6 +145,7 @@ pub fn adosc_default(high: &[f64], low: &[f64], close: &[f64], volume: &[f64]) -
 mod tests {
     use super::*;
     use crate::assert_float_eq;
+    
     #[test]
     fn test_adosc_basic() {
         let high = vec![12.0, 13.0, 12.5, 14.0, 13.5, 15.0, 14.5, 16.0, 15.5, 17.0, 16.5, 18.0];
@@ -190,8 +228,7 @@ mod tests {
         let close = vec![11.0, 12.0, 11.5];
         let volume = vec![1000.0, 1500.0, 800.0];
         
-        // This should fail because EMA requires at least 'period' data points
-        // and we only have 3 data points but need 10 for slow period
+        // This should fail because we need at least slow_period data points
         let result = adosc(&high, &low, &close, &volume, 3, 10);
         assert!(result.is_err());
     }
