@@ -4,7 +4,7 @@
 
 A pure Rust implementation of TA-Lib (Technical Analysis Library) with 100% compatibility. This library provides **80+ technical analysis functions** for financial market analysis without any external C dependencies.
 
-## 🚀 Features
+## Features
 
 - **Pure Rust**: No external C dependencies, fully memory-safe
 - **100% TA-Lib Compatible**: Same algorithms, same results as the original TA-Lib
@@ -14,7 +14,7 @@ A pure Rust implementation of TA-Lib (Technical Analysis Library) with 100% comp
 - **Comprehensive**: 80+ technical analysis functions across 6 major categories
 - **Production Ready**: Phases 1-4 completed with 351 tests passing
 
-## 📦 Installation
+## Installation
 
 Add this to your `Cargo.toml`:
 
@@ -23,7 +23,7 @@ Add this to your `Cargo.toml`:
 ta-rust = "0.1.0"
 ```
 
-## 🏃 Quick Start
+## Quick Start
 
 ```rust
 use ta_rust::prelude::*;
@@ -59,9 +59,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-## 📊 Implemented Indicators (Phases 1-4 Complete)
+## Implemented Indicators (Phases 1-4 Complete)
 
-### ✅ Overlap Studies (9 functions)
+### Overlap Studies (9 functions)
 - **SMA** - Simple Moving Average
 - **EMA** - Exponential Moving Average  
 - **WMA** - Weighted Moving Average
@@ -72,7 +72,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 - **MIDPOINT** - MidPoint over period
 - **MIDPRICE** - Midpoint Price over period
 
-### ✅ Momentum Indicators (30 functions)
+### Momentum Indicators (30 functions)
 - **RSI** - Relative Strength Index
 - **MACD** - Moving Average Convergence/Divergence
 - **MACDEXT** - MACD with controllable MA types
@@ -103,37 +103,37 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 - **AROON** - Aroon Up/Down
 - **AROONOSC** - Aroon Oscillator
 
-### ✅ Volatility Indicators (3 functions)
+### Volatility Indicators (3 functions)
 - **ATR** - Average True Range
 - **NATR** - Normalized Average True Range
 - **TRANGE** - True Range
 
-### ✅ Price Transform (4 functions)
+### Price Transform (4 functions)
 - **AVGPRICE** - Average Price
 - **MEDPRICE** - Median Price
 - **TYPPRICE** - Typical Price
 - **WCLPRICE** - Weighted Close Price
 
-### ✅ Math Transform (15 functions)
+### Math Transform (15 functions)
 - **SIN**, **COS**, **TAN** - Trigonometric functions
 - **ASIN**, **ACOS**, **ATAN** - Inverse trigonometric functions
 - **SINH**, **COSH**, **TANH** - Hyperbolic functions
 - **LN**, **LOG10**, **EXP** - Logarithmic functions
 - **SQRT**, **CEIL**, **FLOOR** - Mathematical functions
 
-### ✅ Math Operators (11 functions)
+### Math Operators (11 functions)
 - **ADD**, **SUB**, **MULT**, **DIV** - Basic arithmetic
 - **MAX**, **MIN** - Maximum/Minimum over period
 - **MAXINDEX**, **MININDEX** - Index of max/min
 - **MINMAX**, **MINMAXINDEX** - Combined operations
 - **SUM** - Summation
 
-### ✅ Volume Indicators (3 functions)
+### Volume Indicators (3 functions)
 - **OBV** - On Balance Volume
 - **AD** - Chaikin A/D Line
 - **ADOSC** - Chaikin A/D Oscillator
 
-### ✅ Advanced Overlap Studies (8 functions)
+### Advanced Overlap Studies (8 functions)
 - **BBANDS** - Bollinger Bands
 - **SAR** - Parabolic SAR
 - **SAREXT** - Parabolic SAR Extended
@@ -143,7 +143,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 - **MAVP** - Moving Average with Variable Period
 - **TRIX** - 1-day Rate-Of-Change of Triple Smooth EMA
 
-### ✅ Statistic Functions (9 functions)
+### Statistic Functions (9 functions)
 - **BETA** - Beta
 - **CORREL** - Pearson's Correlation Coefficient
 - **LINEARREG** - Linear Regression
@@ -154,11 +154,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 - **TSF** - Time Series Forecast
 - **VAR** - Variance
 
-### 🚧 Planned for Future Phases
+### Planned for Future Phases
 - **Cycle Indicators** (5 functions) - Hilbert Transform family
 - **Pattern Recognition** (61 functions) - Candlestick patterns
 
-## 🔧 Advanced Usage
+## Advanced Usage
 
 ### Error Handling
 
@@ -241,7 +241,7 @@ fn analyze_trend(prices: &[f64], high: &[f64], low: &[f64], close: &[f64])
 }
 ```
 
-## 🎯 Performance
+## Performance
 
 TA-Rust is designed for high performance:
 
@@ -261,7 +261,7 @@ Stochastic: 3.2μs  ✅
 ADX:        4.1μs  ✅
 ```
 
-## 🧪 Testing
+## Testing
 
 The library includes comprehensive tests:
 
@@ -283,11 +283,11 @@ cargo bench
 
 ### Test Coverage
 - **351 total tests** across all modules
-- **100% success rate** ✅
-- **Zero compilation warnings** ✅
+- **100% success rate** 
+- **Zero compilation warnings** 
 - **Complete edge case coverage**
 
-## 📚 Documentation
+## Documentation
 
 ### Getting Started
 - [Installation Guide](docs/installation.md) - Setup and configuration
@@ -306,7 +306,7 @@ cargo bench
 - [Error Handling](docs/error-handling.md) - Robust error management
 - [Contributing Guide](docs/contributing.md) - How to contribute
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
@@ -328,30 +328,29 @@ This project is dual-licensed under:
 
 Choose the license that best fits your needs.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Original [TA-Lib](https://ta-lib.org/) by Mario Fortier
 - The Rust community for excellent crates and tools
 - All contributors to this project
 
-## 📞 Contact & Support
+## Contact & Support
 
 - **GitHub**: [@pixelbrow720](https://github.com/pixelbrow720)
 - **X (Twitter)**: [@BrowPixel](https://x.com/BrowPixel)
 - **Email**: pixelbrow13@gmail.com
 - **Telegram**: [@liu483](https://t.me/liu483)
-- **Instagram**: [@mitsubimeow_](https://instagram.com/mitsubimeow_)
 
-## 📈 Current Status
+## Current Status
 
-### ✅ Completed (Phases 1-5)
+### Completed (Phases 1-5)
 - **100+ functions implemented** across 9 categories
 - **Comprehensive test coverage** with high success rate
 - **Zero compilation warnings**
 - **Production-ready quality**
 - **Comprehensive documentation**
 
-### 📊 Implementation Progress
+### Implementation Progress
 | Category | Functions | Status |
 |----------|-----------|--------|
 | Overlap Studies | 9 | ✅ Complete |
